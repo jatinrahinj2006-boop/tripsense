@@ -510,6 +510,13 @@
 <!-- FOOTER -->
 <footer>
   <p>Powered by <b>TripSense</b> — Breathing data into life 🌱</p>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+    <span>·</span>
+    <a href="terms.html">Terms & Conditions</a>
+    <span>·</span>
+    <a href="mailto:privacy@thetripsense.in">Contact</a>
+  </div>
 </footer>
 
 <script src="script.js"></script>
@@ -533,5 +540,19 @@
   }, { threshold: 0.07, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.reveal').forEach(el => window.revealObserver.observe(el));
 </script>
+
+<!-- Cookie Consent -->
+<div id="cookieConsent" class="cookie-consent hidden">
+  <div class="cookie-content">
+    <p>🍪 We use localStorage to save your preferences like 
+    favorite cities and dark mode. No tracking cookies. 
+    <a href="privacy.html">Privacy Policy</a></p>
+    <div class="cookie-buttons">
+      <button id="cookieAccept" class="cookie-accept">Got it!</button>
+      <a href="privacy.html" class="cookie-learn">Learn more</a>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
