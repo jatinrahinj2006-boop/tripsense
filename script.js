@@ -596,6 +596,21 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('scroll', () => {
     document.querySelector('.navbar').classList.toggle('scrolled', window.scrollY > 50);
   });
+  
+  // Cookie consent
+  const cookieConsent = document.getElementById('cookieConsent');
+  const cookieAccept = document.getElementById('cookieAccept');
+
+  if (!localStorage.getItem('cookieAccepted')) {
+    setTimeout(() => {
+      cookieConsent?.classList.remove('hidden');
+    }, 2000);
+  }
+
+  cookieAccept?.addEventListener('click', () => {
+    localStorage.setItem('cookieAccepted', 'true');
+    cookieConsent?.classList.add('hidden');
+  });
 });
 
 // [Rest of existing Modal, Favorite, and Event Listener logic remains unchanged]
