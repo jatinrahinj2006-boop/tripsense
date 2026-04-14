@@ -7,52 +7,14 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // ── 1. TYPING PLACEHOLDER ANIMATION ─────────────────────────
-  const placeholders = [
-    "Where to next? Try Bali…",
-    "Search Paris, Tokyo, Dubai…",
-    "Explore Goa, Manali, London…",
-    "Type any city or country…"
-  ];
-  let phIndex = 0, charIndex = 0, isDeleting = false, typingTimer;
-  const cityInput = document.getElementById('cityInput');
-
-  function animatePlaceholder() {
-    if (!cityInput || document.activeElement === cityInput) return;
-    const current = placeholders[phIndex];
-    if (!isDeleting) {
-      cityInput.setAttribute('placeholder', current.substring(0, charIndex + 1));
-      charIndex++;
-      if (charIndex === current.length) {
-        isDeleting = true;
-        typingTimer = setTimeout(animatePlaceholder, 2000);
-        return;
-      }
-    } else {
-      cityInput.setAttribute('placeholder', current.substring(0, charIndex - 1));
-      charIndex--;
-      if (charIndex === 0) { isDeleting = false; phIndex = (phIndex + 1) % placeholders.length; }
-    }
-    typingTimer = setTimeout(animatePlaceholder, isDeleting ? 38 : 75);
-  }
-  animatePlaceholder();
-  cityInput?.addEventListener('focus', () => {
-    clearTimeout(typingTimer);
-    cityInput.setAttribute('placeholder', 'Search any city…');
-  });
-  cityInput?.addEventListener('blur', () => {
-    if (!cityInput.value) { charIndex = 0; isDeleting = false; animatePlaceholder(); }
-  });
-
-
-  // ── 2. SCROLL-AWARE NAVBAR ───────────────────────────────────
+  // ── 1. SCROLL-AWARE NAVBAR ───────────────────────────────────
   const navbar = document.querySelector('.navbar');
   window.addEventListener('scroll', () => {
     navbar?.classList.toggle('scrolled', window.scrollY > 50);
   }, { passive: true });
 
 
-  // ── 3. DESTINATION CARD PARALLAX TILT ───────────────────────
+  // ── 2. DESTINATION CARD PARALLAX TILT ───────────────────────
   document.querySelectorAll('.dest-card').forEach(card => {
     card.style.transformStyle = 'preserve-3d';
     card.style.perspective = '800px';
@@ -72,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // ── 4. TOAST NOTIFICATION SYSTEM ────────────────────────────
+  // ── 3. TOAST NOTIFICATION SYSTEM ────────────────────────────
   // Exposed globally so other code can call showToast()
   window.showToast = function(message, type = 'info') {
     const container = document.getElementById('toastContainer');
@@ -87,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
 
-  // ── 5. RECENT SEARCHES ───────────────────────────────────────
+  // ── 4. RECENT SEARCHES ───────────────────────────────────────
   function getRecentSearches() {
     try { return JSON.parse(localStorage.getItem('ts_recent') || '[]'); } catch { return []; }
   }
@@ -116,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderRecentSearches();
 
 
-  // ── 6. KEYBOARD SHORTCUTS ────────────────────────────────────
+  // ── 5. KEYBOARD SHORTCUTS ────────────────────────────────────
   document.addEventListener('keydown', (e) => {
     if (e.key === '/' && document.activeElement !== cityInput) {
       e.preventDefault();
@@ -129,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-  // ── 7. COUNT-UP ANIMATION ────────────────────────────────────
+  // ── 6. COUNT-UP ANIMATION ────────────────────────────────────
   window.animateValue = function(el, start, end, duration, suffix = '') {
     if (!el || isNaN(end)) return;
     const startTime = performance.now();
@@ -143,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
 
-  // ── 8. TRAVEL SCORE RING ─────────────────────────────────────
+  // ── 7. TRAVEL SCORE RING ─────────────────────────────────────
   window.getTravelScore = function(data) {
     let score = 100;
     score -= (data.aqi - 1) * 12;
@@ -173,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
 
-  // ── 9. LOCAL TIME + SUNRISE/SUNSET ──────────────────────────
+  // ── 8. LOCAL TIME + SUNRISE/SUNSET ──────────────────────────
   let _timeInterval;
   window.updateTimeInfo = function(data) {
     clearInterval(_timeInterval);
@@ -202,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
 
-  // ── 10. COMPARE CITIES MODAL ─────────────────────────────────
+  // ── 9. COMPARE CITIES MODAL ─────────────────────────────────
   const apiKey = 'ea0fca7e491fa7f02d2db5d62c66f187'; // same key as script.js
 
   async function compareCities() {
@@ -273,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('runCompare')?.addEventListener('click', compareCities);
 
 
-  // ── 11. HOOK INTO RESULTS DISPLAY ────────────────────────────
+  // ── 10. HOOK INTO RESULTS DISPLAY ────────────────────────────
   // Intercept the resultsSection becoming visible to run all our enhancements
   const resultsEl = document.getElementById('resultsSection');
   if (resultsEl) {
