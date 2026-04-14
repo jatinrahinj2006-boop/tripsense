@@ -24,17 +24,96 @@ const closeShareModal = document.getElementById('closeShareModal');
 const favCount = document.getElementById('favCount');
 
 // --- NEW FEATURE: TYPING PLACEHOLDER ---
-const placeholders = ["Where to next? Try Bali…", "Search Paris, Tokyo, Dubai…", "Explore Goa, Manali, London…"];
-let phIndex = 0, charIndex = 0, isDeleting = false, typingTimer;
+const placeholders = [
+  "Where to next? Try Bali…",
+  "Search Paris, Tokyo, Dubai…",
+  "Explore Goa, Manali, London…",
+  "Type any city or country…"
+];
+let phIndex = 0;
+let charIndex = 0;
+let typingTimer = null;
+let currentPhase = 'typing'; // 'typing', 'pause', 'deleting', 'between'
 
-function animatePlaceholder() {
+function stopAnimation() {
+  if (typingTimer) {
+    clearTimeout(typingTimer);
+    typingTimer = null;
+  }
+}
+
+function typeNextChar() {
   const input = document.getElementById('cityInput');
-  if (document.activeElement === input) return;
-  const current = placeholders[phIndex];
-  input.setAttribute('placeholder', isDeleting ? current.substring(0, charIndex--) : current.substring(0, charIndex++));
-  if (!isDeleting && charIndex === current.length) { isDeleting = true; typingTimer = setTimeout(animatePlaceholder, 2000); }
-  else if (isDeleting && charIndex === 0) { isDeleting = false; phIndex = (phIndex + 1) % placeholders.length; typingTimer = setTimeout(animatePlaceholder, 500); }
-  else { typingTimer = setTimeout(animatePlaceholder, isDeleting ? 40 : 80); }
+  if (!input || document.activeElement === input) {
+    stopAnimation();
+    return;
+  }
+  
+  const currentText = placeholders[phIndex];
+  charIndex++;
+  input.setAttribute('placeholder', currentText.substring(0, charIndex));
+  
+  if (charIndex < currentText.length) {
+    // Still typing
+    typingTimer = setTimeout(typeNextChar, 55);
+  } else {
+    // Done typing - pause before deleting
+    currentPhase = 'pause';
+    typingTimer = setTimeout(startDeleting, 1500);
+  }
+}
+
+function startDeleting() {
+  const input = document.getElementById('cityInput');
+  if (!input || document.activeElement === input) {
+    stopAnimation();
+    return;
+  }
+  
+  currentPhase = 'deleting';
+  deleteNextChar();
+}
+
+function deleteNextChar() {
+  const input = document.getElementById('cityInput');
+  if (!input || document.activeElement === input) {
+    stopAnimation();
+    return;
+  }
+  
+  const currentText = placeholders[phIndex];
+  charIndex--;
+  input.setAttribute('placeholder', currentText.substring(0, charIndex));
+  
+  if (charIndex > 0) {
+    // Still deleting
+    typingTimer = setTimeout(deleteNextChar, 30);
+  } else {
+    // Done deleting - move to next phrase
+    phIndex = (phIndex + 1) % placeholders.length;
+    currentPhase = 'between';
+    typingTimer = setTimeout(startTyping, 300);
+  }
+}
+
+function startTyping() {
+  const input = document.getElementById('cityInput');
+  if (!input || document.activeElement === input) {
+    stopAnimation();
+    return;
+  }
+  
+  currentPhase = 'typing';
+  charIndex = 0;
+  typeNextChar();
+}
+
+function startAnimation() {
+  stopAnimation();
+  phIndex = 0;
+  charIndex = 0;
+  currentPhase = 'typing';
+  typeNextChar();
 }
 
 // --- NEW FEATURE: TOASTS ---
@@ -589,7 +668,7 @@ function renderRecent() {
 
 // Initialization
 document.addEventListener('DOMContentLoaded', () => {
-  animatePlaceholder();
+  startAnimation();
   renderRecent();
   lucide.createIcons();
   
@@ -625,6 +704,18 @@ searchBtn.addEventListener('click', () => {
 
 cityInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') searchBtn.click();
+});
+
+// Focus/blur listeners to stop/restart placeholder animation
+cityInput?.addEventListener('focus', () => {
+  stopAnimation();
+  cityInput.setAttribute('placeholder', 'Search any city…');
+});
+
+cityInput?.addEventListener('blur', () => {
+  if (!cityInput.value) {
+    startAnimation();
+  }
 });
 
 // [Autocomplete functionality]
