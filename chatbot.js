@@ -11,6 +11,7 @@ class TripSenseAI {
     this.container = document.getElementById('chatbotContainer');
     this.closeBtn = document.getElementById('chatbotClose');
     this.clearBtn = document.getElementById('chatbotClear');
+    this.overlay = document.getElementById('chatbotOverlay');
     
     this.conversationHistory = [];
     this.isProcessing = false;
@@ -38,13 +39,9 @@ class TripSenseAI {
         this.closeChat();
       }
     });
-    
-    // Click outside to close
-    document.addEventListener('click', (e) => {
-      if (!this.container.contains(e.target) && !this.toggleBtn.contains(e.target)) {
-        this.closeChat();
-      }
-    });
+
+    // Click overlay to close
+    this.overlay?.addEventListener('click', () => this.closeChat());
     
     // Initialize Lucide icons
     if (window.lucide) {
@@ -54,10 +51,10 @@ class TripSenseAI {
   
   toggleChat() {
     const isHidden = this.container.classList.contains('hidden');
-    
+
     if (isHidden) {
       this.container.classList.remove('hidden');
-      this.toggleBtn.style.transform = 'scale(0)';
+      this.overlay?.classList.add('active');
       setTimeout(() => {
         this.input?.focus();
         this.scrollToBottom();
@@ -66,10 +63,10 @@ class TripSenseAI {
       this.closeChat();
     }
   }
-  
+
   closeChat() {
     this.container.classList.add('hidden');
-    this.toggleBtn.style.transform = 'scale(1)';
+    this.overlay?.classList.remove('active');
   }
   
   async sendMessage(messageText = null) {
