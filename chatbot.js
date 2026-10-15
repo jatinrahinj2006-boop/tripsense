@@ -1,5 +1,5 @@
 /* ============================================================
-   TripSense AI Chatbot - Powered by Groq · Llama 3.1
+   TripSense AI Chatbot - Powered by Groq · GPT-OSS 20B
    ============================================================ */
 
 class TripSenseAI {
@@ -143,7 +143,7 @@ Format your responses with:
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'llama-3.1-8b-instant', // Groq's fast, cost-effective model
+          model: 'openai/gpt-oss-20b', // Groq production model (replaces llama-3.1-8b-instant)
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userMessage }

@@ -24,7 +24,7 @@ TripSense is a modern, responsive travel planning web application that provides 
 - Dynamic search links based on selected city
 
 ### 🤖 AI Travel Assistant (TripSense AI)
-- Powered by Groq · Llama 3.1 via Cloudflare Worker proxy
+- Powered by Groq · GPT-OSS 20B via Cloudflare Worker proxy
 - Context-aware responses using current weather data
 - Smart suggestions for itineraries, packing, and local tips
 - Dark mode compatible glassmorphism UI
@@ -195,7 +195,7 @@ This project is open source. Feel free to use, modify, and distribute.
 ## 🙏 Credits
 
 - Weather data: [OpenWeatherMap](https://openweathermap.org)
-- AI responses: [Groq](https://groq.com) · Llama 3.1
+- AI responses: [Groq](https://groq.com) · GPT-OSS 20B (`openai/gpt-oss-20b`)
 - Icons: [Lucide](https://lucide.dev)
 - Images: [Unsplash](https://unsplash.com)
 - Fonts: [Google Fonts](https://fonts.google.com)
